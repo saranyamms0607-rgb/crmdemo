@@ -1,0 +1,124 @@
+/* Page wrapper */
+.settings-wrapper {
+  padding: 30px;
+}
+
+/* Back button */
+.back-btn {
+  background: transparent;
+  border: 1px solid #ffe7a9;
+  color: #ffe7a9;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.25s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255, 231, 169, 0.1);
+  transform: translateX(-3px);
+}
+
+/* Cards container */
+.settings-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 700px;
+}
+
+/* Card style */
+.settings-card {
+  background: linear-gradient(135deg, #0d0f19, #14182a);
+  border: 1px solid #ffe7a9;
+  border-radius: 14px;
+  padding: 24px;
+  color: #ffe7a9;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease;
+}
+
+.settings-card:hover {
+  transform: translateY(-5px);
+}
+
+.settings-card h3 {
+  margin-bottom: 6px;
+  font-size: 18px;
+}
+
+.settings-card p {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-bottom: 18px;
+}
+
+
+.settings-card p {
+  font-size: 14px;
+  opacity: 0.85;
+  margin-bottom: 16px;
+}
+
+/* Common button style */
+.settings-btn {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: 1px solid #ffe7a9;
+}
+
+/* Export button */
+.export-btn {
+  background: #0d0f19;
+  color: #ffe7a9;
+}
+
+.export-btn:hover:not(:disabled) {
+  background: #14182a;
+}
+
+/* Import button */
+.import-btn {
+  background: #ffe7a9;
+  color: #0d0f19;
+  border: none;
+}
+
+.import-btn:hover:not(:disabled) {
+  transform: scale(1.03);
+}
+
+/* Disabled state */
+.settings-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Import box layout */
+.import-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Custom file input */
+.file-input {
+  padding: 10px;
+  border: 1px dashed #ffe7a9;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 13px;
+  cursor: pointer;
+  color: #ffe7a9;
+  transition: background 0.25s ease;
+}
+
+.file-input:hover {
+  background: rgba(255, 231, 169, 0.08);
+}
