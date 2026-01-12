@@ -1,0 +1,183 @@
+/* ===============================
+   ROOT COLORS (your palette)
+================================ */
+:root {
+  --primary-dark: #6b1f2b;
+  --primary-mid: #7a2530;
+  --primary-light: #9a5a2a;
+
+  --cream-bg: #fff3c4;
+  --card-bg: #fff8de;
+
+  --text-light: #f9e7d3;
+  --text-muted: rgba(255, 255, 255, 0.75);
+  --text-dark: #5b1d26;
+
+  --border-soft: rgba(91, 29, 38, 0.15);
+  --input-bg: #fff6df;
+
+  --btn-bg: #5b0f1b;
+  --btn-hover: #731826;
+
+  --shadow-soft: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* ===============================
+   PAGE WRAPPER
+================================ */
+.add-user-page {
+  min-height: 100vh;
+  background: var(--cream-bg);
+  padding: 40px;
+  font-family: "Poppins", sans-serif;
+  color: var(--text-dark);
+}
+
+/* ===============================
+   CARD CONTAINER
+================================ */
+.add-user-card {
+  background: var(--card-bg);
+  border-radius: 18px;
+  padding: 30px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* ===============================
+   TITLE
+================================ */
+.add-user-card h2 {
+  margin-bottom: 20px;
+  color: var(--primary-dark);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* ===============================
+   FORM
+================================ */
+.user-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.user-form input {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  background: var(--input-bg);
+  color: var(--text-dark);
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.user-form input::placeholder {
+  color: rgba(91, 29, 38, 0.55);
+}
+
+.user-form input:focus {
+  border-color: var(--primary-mid);
+  box-shadow: 0 0 0 2px rgba(122, 37, 48, 0.15);
+}
+
+/* ===============================
+   BUTTON
+================================ */
+.user-form button {
+  grid-column: 1 / -1;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: var(--btn-bg);
+  color: var(--text-light);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.user-form button:hover {
+  background: var(--btn-hover);
+  transform: translateY(-1px);
+}
+
+/* ===============================
+   TABLE
+================================ */
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.user-table thead {
+  background: var(--primary-dark);
+}
+
+.user-table thead th {
+  color: var(--text-light);
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.user-table tbody tr {
+  border-bottom: 1px solid var(--border-soft);
+  transition: background 0.2s ease;
+}
+
+.user-table tbody tr:hover {
+  background: rgba(154, 90, 42, 0.08);
+}
+
+.user-table td {
+  padding: 12px;
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+/* ===============================
+   ACTION BUTTONS
+================================ */
+.action-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  margin-right: 6px;
+}
+
+.action-btn.edit {
+  background: #1C6E55;
+  color: var(--cream-bg);
+}
+
+.action-btn.delete {
+  background: var(--btn-bg);
+  color: var(--cream-bg);
+}
+
+.action-btn:hover {
+  opacity: 0.9;
+}
+
+
+select {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  background: var(--input-bg);
+  color: var(--text-dark);
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+select:focus {
+  border-color: var(--primary-mid);
+  box-shadow: 0 0 0 2px rgba(122, 37, 48, 0.15);
+}

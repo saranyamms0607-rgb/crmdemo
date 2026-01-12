@@ -1,33 +1,65 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import "../styles/ForgotPassword.css";
 
 export const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const submitEmail = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    const res = await fetch("http://127.0.0.1:8000/api/auth/forgot-password/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/auth/forgot-password/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
 
-    const data = await res.json();
-    res.ok ? toast.success(data.message) : toast.error(data.message);
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success(
+          "Reset link sent successfully! 📩 Please check your email to continue."
+        );
+        setEmail("");
+      } else {
+        setError(data.message || "Something went wrong. Try again.");
+        toast.error(data.message || "Failed to send reset link");
+      }
+    } catch (err) {
+      setError("Server error. Please try again later.");
+      toast.error("Server error. Please try again later.",err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form onSubmit={submitEmail} className="login-card">
-      <h2>Forgot Password</h2>
-      <input
-        type="email"
-        placeholder="Enter your email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <button type="submit">Send Reset Link</button>
-    </form>
+    <div className="forgot-container">
+      <form onSubmit={submitEmail} className="forgot-card">
+        <h2>Forgot Password</h2>
+        <p className="subtitle">
+          Enter your registered email address and we’ll send you a reset link.
+        </p>
+
+        <input
+          type="email"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+
+        {error && <p className="error-text">{error}</p>}
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Sending..." : "Send Reset Link"}
+        </button>
+      </form>
+    </div>
   );
 };

@@ -1,44 +1,86 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import "../styles/ResetPassword.css";
 
 export const ResetPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
+
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const resetPassword = async (e) => {
     e.preventDefault();
+    setError("");
 
-    const res = await fetch(
-      `http://127.0.0.1:8000/api/auth/reset-password/${token}/`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:8000/api/auth/reset-password/${token}/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success("Password reset successfully. Please login.");
+        navigate("/");
+      } else {
+        setError(data.message || "Reset failed");
+        toast.error(data.message || "Reset failed");
       }
-    );
-
-    const data = await res.json();
-
-    if (res.ok) {
-      toast.success(data.message);
-      navigate("/");
-    } else {
-      toast.error(data.message);
+    } catch (err) {
+      setError("Server error. Please try again.");
+      toast.error("Server error. Please try again.",err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={resetPassword} className="login-card">
-      <h2>Reset Password</h2>
-      <input
-        type="password"
-        placeholder="New Password"
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-      <button type="submit">Reset Password</button>
-    </form>
+    <div className="reset-container">
+      <form onSubmit={resetPassword} className="reset-card">
+        <h2>Reset Password</h2>
+        <p className="subtitle">
+          Enter your new password below to secure your account.
+        </p>
+
+        <input
+          type="password"
+          placeholder="New Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+
+        {error && <p className="error-text">{error}</p>}
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Resetting..." : "Reset Password"}
+        </button>
+      </form>
+    </div>
   );
 };

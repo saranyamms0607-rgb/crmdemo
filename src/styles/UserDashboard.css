@@ -1,0 +1,112 @@
+/* ===============================
+   USER DASHBOARD LAYOUT
+================================ */
+
+.user-sidebar {
+  width: 260px;
+}
+
+.user-main {
+  
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===============================
+   STATS HEADER
+================================ */
+
+.user-stats {
+  min-width: 200px;
+  margin: 0 ;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 30px;
+  
+}
+
+.user-stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  padding: 22px 26px;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+  overflow: hidden;
+  transition: 0.25s ease;
+}
+
+/* Top gradient accent */
+.user-stat-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-dark),
+    var(--primary-mid),
+    var(--primary-light)
+  );
+}
+
+.user-stat-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+
+.user-stat-card span {
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+/* Hover effect */
+.user-stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 45px rgba(91, 29, 38, 0.2);
+}
+
+/* ===============================
+   CHART SECTION
+================================ */
+
+.user-chart-center {
+  display: flex;
+  justify-content: center;
+}
+
+.user-chart-wrap {
+  min-width: 800px;
+}
+
+.user-chart-card {
+  background: var(--card-bg);
+  border-radius: 22px;
+  padding: 30px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-soft);
+  /* max-width: 1050px; */
+  margin: auto;
+  
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 768px) {
+  .user-main {
+    padding: 20px;
+  }
+
+  .user-stat-card span {
+    font-size: 26px;
+  }
+}

@@ -53,7 +53,8 @@ export const Login = () => {
             localStorage.setItem("refresh", data.refresh);
             localStorage.setItem("role", data.role);
             localStorage.setItem("email", email); // remember user
-
+            
+            
             toast.success(data.message);
 
             setTimeout(() => {

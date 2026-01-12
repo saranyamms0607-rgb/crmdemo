@@ -16,11 +16,13 @@ import {
   FiUserMinus,
   FiSettings,
   FiChevronDown,
-  FiChevronUp
+  FiChevronUp,
+  FiFileText 
 } from "react-icons/fi";
-import Logo from '../assets/mms-logo-gold.png';
+import Logo from '../assets/logo.png';
+import LogoContent from "../assets/name.png";
 import { NavLink } from "react-router-dom";
-import '../styles/Dashboard.css';
+import '../styles/Sidebar.css';
 
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -29,6 +31,7 @@ import { toast } from "react-toastify";
 
 
 export const Sidebar = ({ selectedStatus, onStatusChange }) => {
+  const user_role = localStorage.getItem("role");
   const [openLeads, setOpenLeads] = useState(false);
   const navigate = useNavigate();
 
@@ -39,29 +42,60 @@ const handleStatusSelect = (status) => {
 
 
 
-  const handleLogout = async () => {
-    try {
-      await fetch("http://127.0.0.1:8000/api/auth/logout/", {
-        method: "POST",
+        const handleLogout = async () => {
+          try {
+            await fetch("http://127.0.0.1:8000/api/auth/logout/", {
+              method: "POST",
+            });
+            localStorage.clear();
+            toast.success("Logged out successfully");
+            navigate("/"); // go back to login
+          } catch {
+            toast.error("Logout failed");
+          }
+        };
+        const leadItems = [
+          { label: "Unassigned", value: "unassigned", icon: <FiUserMinus /> },
+          { label: "Assigned", value: "assigned", icon: <FiClipboard /> },
+          { label: "Second Call Attempt", value: "second-attempt", icon: <FiPhoneCall /> },
+          { label: "Third Call Attempt", value: "third-attempt", icon: <FiRepeat /> },
+          { label: "Completed", value: "completed", icon: <FiCheckCircle /> },
+          { label: "Follow Up", value: "followup", icon: <FiClock /> },
+          { label: "Prospect", value: "prospect", icon: <FiUserPlus /> },
+          { label: "Deal Won", value: "deal-won", icon: <FiTrendingUp /> },
+          { label: "Deal Lost", value: "deal-lost", icon: <FiTrendingDown /> },
+          { label: "DND", value: "dnd", icon: <FiSlash /> },
+        ];
+
+      // Filter lead items based on role
+      const filteredLeadItems = leadItems.filter((item) => {
+        // AGENT should not see "Unassigned"
+        if (user_role === "AGENT" && item.value === "unassigned") return false;
+        return true;
       });
-      localStorage.clear();
-      toast.success("Logged out successfully");
-      navigate("/"); // go back to login
-    } catch {
-      toast.error("Logout failed");
-    }
-  };
   return (
     <div>
-       <div className="logo-sidebar"><img src={Logo} alt="Logo" /></div>
+       <div className="logo-sidebar"><img src={Logo} alt="Logo" />
+       <img src={LogoContent} alt='Content' className='logo-content'/></div>
 
-                <nav className="sidebar-nav">
-      <a className="active">
-        <FiHome /> Dashboard
-      </a>
+      <nav className="sidebar-nav">
+        {user_role !== "AGENT" && (
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) =>
+              `dropdown-item ${isActive ? "active" : ""}`
+            }
+          >
+            <FiHome />
+            <span>Dashboard</span>
+          </NavLink>
+        )}
+
+
 
       {/* Leads Dropdown */}
       <div className="dropdown">
+        <>
           <button
             className="dropdown-toggle"
             onClick={() => setOpenLeads(!openLeads)}
@@ -71,25 +105,12 @@ const handleStatusSelect = (status) => {
             {openLeads ? <FiChevronUp /> : <FiChevronDown />}
           </button>
 
-          {openLeads && (
+           {openLeads && (
             <div className="dropdown-menu">
-              {[
-                { label: "Unassigned", value: "unassigned", icon: <FiUserMinus /> },
-                { label: "Assigned", value: "assigned", icon: <FiClipboard /> },
-                { label: "Second Call Attempt", value: "second-attempt", icon: <FiPhoneCall /> },
-                { label: "Third Call Attempt", value: "third-attempt", icon: <FiRepeat /> },
-                { label: "Completed", value: "completed", icon: <FiCheckCircle /> },
-                { label: "Follow Up", value: "followup", icon: <FiClock /> },
-                { label: "Prospect", value: "prospect", icon: <FiUserPlus /> },
-                { label: "Deal Won", value: "deal-won", icon: <FiTrendingUp /> },
-                { label: "Deal Lost", value: "deal-lost", icon: <FiTrendingDown /> },
-                { label: "DND", value: "dnd", icon: <FiSlash /> },
-              ].map((item) => (
+              {filteredLeadItems.map((item) => (
                 <button
                   key={item.value}
-                  className={`dropdown-item ${
-                    selectedStatus === item.value ? "active" : ""
-                  }`}
+                  className={`dropdown-item ${selectedStatus === item.value ? "active" : ""}`}
                   onClick={() => handleStatusSelect(item.value)}
                 >
                   {item.icon}
@@ -98,16 +119,25 @@ const handleStatusSelect = (status) => {
               ))}
             </div>
           )}
+        </>
         </div>
 
 
-
+       {/* Settings - only ADMIN and SUPERVISOR */}
+        {(user_role === "ADMIN" || user_role === "SUPERVISOR") &&
+        <>
+        <NavLink to="/reports" className={({ isActive }) =>
+                `dropdown-item ${isActive ? "active" : ""}`
+              }>
+                <FiFileText />
+                <span>Reports</span>
+              </NavLink>
       <NavLink to="/settings" className={({ isActive }) =>
                 `dropdown-item ${isActive ? "active" : ""}`
               }>
                 <FiSettings />
                 <span>Settings</span>
-              </NavLink>
+              </NavLink></>}
     </nav>
 
        
