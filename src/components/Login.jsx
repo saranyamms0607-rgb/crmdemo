@@ -48,7 +48,7 @@ export const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-            // ✅ Save tokens (NO UI change)
+            // Save tokens (NO UI change)
             localStorage.setItem("access", data.access);
             localStorage.setItem("refresh", data.refresh);
             localStorage.setItem("role", data.role);
@@ -65,7 +65,7 @@ export const Login = () => {
             toast.error(data.message);
           }
 
-        // 👉 Example redirect (enable when ready)
+        //  Example redirect (enable when ready)
         // window.location.href = "/assigned";
 
 

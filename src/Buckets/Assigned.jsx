@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useCallback} from "react";
 import { Sidebar } from "../components/Sidebar";
 import "../styles/Assigned.css";
 import axios from "axios";
@@ -58,64 +58,116 @@ export const Assigned = () => {
 
   /* ================= FETCH LEADS ================= */
 
-useEffect(() => {
-  let ignore = false;
+// useEffect(() => {
+//   let ignore = false;
 
-  const fetchLeads = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get( `${API}`, {
-        params: {
-          status: selectedStatus,
-          page,
-          page_size: pageSize,
-          search,
-          name: filters.name,
-          company: filters.company,
-          region: filters.region,
-          today
-        },
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      });
+//   const fetchLeads = async () => {
+//     setLoading(true);
+//     try {
+//       const res = await axios.get( `${API}`, {
+//         params: {
+//           status: selectedStatus,
+//           page,
+//           page_size: pageSize,
+//           search,
+//           name: filters.name,
+//           company: filters.company,
+//           region: filters.region,
+//           today
+//         },
+//         headers: {
+//           Authorization: `Bearer ${localStorage.getItem("access")}`,
+//         },
+//       });
 
-      if (!ignore) {
-        setLeads(res.data?.data || []);
-        setTotalCount(res.data?.count || 0);
-      }
-    } catch (error) {
-      if (error.response?.status === 401) {
-        localStorage.clear();
-        navigate("/login");
-      } else {
-        // Show any other backend error in toast
-        const backendMessage =
-          error.response?.data?.message ||
-          error.response?.data?.error ||
-          error.message ||
-          "Something went wrong";
-        toast.error(backendMessage);
-      }
-    } finally {
-      if (!ignore) setLoading(false);
+//       if (!ignore) {
+//         setLeads(res.data?.data || []);
+//         setTotalCount(res.data?.count || 0);
+//       }
+//     } catch (error) {
+//       if (error.response?.status === 401) {
+//         localStorage.clear();
+//         navigate("/login");
+//       } else {
+//         // Show any other backend error in toast
+//         const backendMessage =
+//           error.response?.data?.message ||
+//           error.response?.data?.error ||
+//           error.message ||
+//           "Something went wrong";
+//         toast.error(backendMessage);
+//       }
+//     } finally {
+//       if (!ignore) setLoading(false);
+//     }
+//   };
+
+//   fetchLeads();
+//   return () => (ignore = true);
+// }, [
+//           selectedStatus,
+//           page,
+//           today,
+//           pageSize,
+//           search,
+//           filters.name,
+//           filters.company,
+//           filters.region,
+//           navigate,
+//         ]);
+
+const fetchLeads = useCallback(async () => {
+  setLoading(true);
+  try {
+    const res = await axios.get(`${API}`, {
+      params: {
+        status: selectedStatus,
+        page,
+        page_size: pageSize,
+        search,
+        name: filters.name,
+        company: filters.company,
+        region: filters.region,
+        today,
+      },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+      },
+    });
+
+    setLeads(res.data?.data || []);
+    setTotalCount(res.data?.count || 0);
+  } catch (error) {
+    if (error.response?.status === 401) {
+      localStorage.clear();
+      navigate("/login");
+    } else {
+      const backendMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        "Something went wrong";
+      toast.error(backendMessage);
     }
-  };
-
-  fetchLeads();
-  return () => (ignore = true);
+  } finally {
+    setLoading(false);
+  }
 }, [
-          selectedStatus,
-          page,
-          today,
-          pageSize,
-          search,
-          filters.name,
-          filters.company,
-          filters.region,
-          navigate,
-        ]);
+  selectedStatus,
+  page,
+  pageSize,
+  search,
+  filters.name,
+  filters.company,
+  filters.region,
+  today,
+  navigate,
+]);
 
+
+useEffect(() => {
+  fetchLeads();
+      }, [fetchLeads]);
 
   /* ================= FETCH AGENTS ================= */
   useEffect(() => {
@@ -164,7 +216,7 @@ useEffect(() => {
 
     setAssigning(true);
     try {
-      await axios.post(
+      const res = await axios.post(
         API,
         {
           lead_ids: selectedLeads, //  BULK
@@ -184,6 +236,12 @@ useEffect(() => {
       setPage(1);
       
       //  navigate("/assigned?status=unassigned", { replace: true });
+      if (res.ok) {
+        toast.warning(res.data.message || "Lead assigned successfully");
+      } else {
+       setPage(1);   
+        toast.success(res.data.message || "Error");
+      }
 
     } catch (err) {
       console.error("Bulk assign failed", err);
@@ -210,7 +268,7 @@ useEffect(() => {
        setPage(1);   
         toast.success(res.data.message || "Lead assigned successfully");
       }
-      navigate("/assigned?status=assigned")
+      fetchLeads();
     } catch (error) {
       toast.error("Unable to assign lead",error);
     } finally {
@@ -236,7 +294,9 @@ useEffect(() => {
       <main className="main">   
         <div className="content">
            { user_role=="AGENT" &&<button
-            className="back-btn"  onClick={assignLead}
+            className="back-btn"  onClick={()=>{assignLead()
+          navigate("/assigned?status=assigned")
+            }}
           disabled={loading}
           >
             Get Lead
@@ -290,7 +350,7 @@ useEffect(() => {
               )}
             </tbody>
           </table>
-            {user_role === "AGENT" &&<div className="assigned-dashboard-center"> <UserDashBoard setToday={setToday}/>
+            {user_role === "AGENT" && selectedStatus==="assigned" &&<div className="assigned-dashboard-center"> <UserDashBoard setToday={setToday}/>
             </div>}
           
           {/* BULK CONTROLS BELOW TABLE */}

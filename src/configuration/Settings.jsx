@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom";
 import ImportLeads from "./ImportLeads";
 import ExportLeads from "./ExportLeads";
 import "../styles/Settings.css";
-import AddUser from "./AddUser";
 import { FiUser } from "react-icons/fi";
-import { CiTextAlignCenter } from "react-icons/ci";
+
 
 
 export const Settings = () => {
@@ -37,6 +36,7 @@ export const Settings = () => {
           <h3>Add Users</h3>
          <FiUser size={100} />
         </div>
+        
       </div>
     </div>
   );

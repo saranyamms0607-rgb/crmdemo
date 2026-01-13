@@ -16,6 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AddUser from "./configuration/AddUser";
 import LeadStatusTracking from "./Buckets/LeadTracking";
 import { Reports } from "./reports/Reports";
+import LeadsReports from "./reports/LeadsReports"
 import { Leads } from "./Buckets/Leads";
 
 function App() {
@@ -40,6 +41,8 @@ function App() {
          <Route path="/leads/:id/tracking" element={<LeadStatusTracking/>} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/adduser" element={<AddUser/>}/>
+        <Route path="/reports" element={<Reports/>}/>
+        <Route path="/leadreports" element={<LeadsReports/>}/>
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>

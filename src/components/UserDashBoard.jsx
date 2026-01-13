@@ -58,9 +58,9 @@ export default function UserDashBoard({setToday}) {
             <span>{stats.total_calls}</span>
           </div>
 
-          <div className="user-stat-card">
-            <h4 onClick={()=>{setToday(true)
-                navigate("/assigned?status=followup")}}>Today FollowUps</h4>
+          <div className="user-stat-card" onClick={()=>{setToday(true)
+                navigate("/assigned?status=followup") }}>
+            <h4>Today FollowUps</h4>
             <span>{stats.today_followups}</span>
           </div>
         </div>
