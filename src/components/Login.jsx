@@ -1,107 +1,140 @@
-import "../styles/Login.css";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { toast } from "react-toastify";
-import React, { useState ,useEffect} from "react";
-import Logo from "../assets/mms-logo-gold.png";
 import { useNavigate } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaSpinner } from "react-icons/fa"; // Added FaSpinner for loading
+import { FiArrowRight, FiLock, FiMail } from "react-icons/fi";
+import Logo from "../assets/mms-logo-gold.png";
 import quotes from "../data/Quotes.json";
+import "../styles/Login.css";
 
+// Constants for better maintainability
+// Safety check for process.env to avoid ReferenceError in non-Node environments
+const API_BASE_URL = (typeof process !== 'undefined' && process.env.REACT_APP_API_BASE_URL) || "http://127.0.0.1:8000";
+const LOGIN_ENDPOINT = "/api/auth/login/";
+const SUCCESS_REDIRECT_PATH = "/assigned";
+const TOAST_DURATION = 800;
+
+/**
+ * Login component for user authentication.
+ * Handles email/password login with token storage and redirection.
+ */
 export const Login = () => {
-   const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [emailError, setEmailError] = useState(""); // For client-side validation
 
   const navigate = useNavigate();
-  const [quote, setQuote] = useState({
-          title: "",
-          content: ""
-        });
-  useEffect(() => {
-  const token = localStorage.getItem("access");
 
-  if (token) {
-    navigate("/assigned");
-  }
-}, [navigate]);
-
-  useEffect(() => {
+  // Memoize random quote to avoid recalculation on re-renders
+  const quote = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * quotes.length);
-    setQuote(quotes[randomIndex]);
+    return quotes[randomIndex];
   }, []);
-  const handleLogin = async (e) => {
+
+  // Check for existing token on mount and redirect if authenticated
+  useEffect(() => {
+    const token = localStorage.getItem("access");
+    if (token) {
+      navigate(SUCCESS_REDIRECT_PATH);
+    }
+  }, [navigate]);
+
+  // Basic email validation regex
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // Handle form submission with improved error handling
+  const handleLogin = useCallback(async (e) => {
     e.preventDefault();
     setLoading(true);
+    setEmailError("");
+
+    // Client-side validation
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+    if (!trimmedEmail || !validateEmail(trimmedEmail)) {
+      setEmailError("Please enter a valid email address.");
+      setLoading(false);
+      return;
+    }
+    if (!trimmedPassword) {
+      toast.error("Password is required.");
+      setLoading(false);
+      return;
+    }
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/auth/login/", {
+      const response = await fetch(`${API_BASE_URL}${LOGIN_ENDPOINT}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: email,
-          password: password,
+          email: trimmedEmail,
+          password: trimmedPassword,
         }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-            // Save tokens (NO UI change)
-            localStorage.setItem("access", data.access);
-            localStorage.setItem("refresh", data.refresh);
-            localStorage.setItem("role", data.role);
-            localStorage.setItem("email", email); // remember user
-            
-            
-            toast.success(data.message);
+        // Store tokens securely
+        localStorage.setItem("access", data.access);
+        localStorage.setItem("refresh", data.refresh);
+        localStorage.setItem("role", data.role);
+        localStorage.setItem("email", trimmedEmail);
 
-            setTimeout(() => {
-              navigate("/assigned");
-            }, 800);
-          }
-    else {
-            toast.error(data.message);
-          }
+        toast.success("Welcome back! Redirecting...", {
+          icon: "👋",
+        });
 
-        //  Example redirect (enable when ready)
-        // window.location.href = "/assigned";
-
-
+        setTimeout(() => {
+          navigate(SUCCESS_REDIRECT_PATH);
+        }, TOAST_DURATION);
+      } else {
+        // Handle specific error messages from server
+        const errorMessage = data.message || "Login failed. Please check your credentials.";
+        toast.error(errorMessage);
+      }
     } catch (error) {
-      console.log("Server error. Try again later." + error.message);
+      // Handle network or unexpected errors
+      toast.error("Network error. Please check your connection and try again.",error.message);
+      // In production, log to a service instead of console
     } finally {
       setLoading(false);
     }
-  };
-  
+  }, [email, password, navigate]);
 
-        
-      
   return (
     <div className="login-page">
       {/* LEFT BRAND PANEL */}
       <div className="brand-panel">
+        <div className="brand-overlay"></div>
         <div className="brand-content">
-          <div className="logo"><img src={Logo} alt="Logo" />
-          <span className="logo-text">Mediamatic Studio</span></div>
-
-          <h1>{quote.title}</h1>
-          <p>{quote.content}</p>
-
-          <div className="stats">
-            <div className="stat">
-              <h3>10K+</h3>
-              <span>Active Users</span>
+          <div className="logo-container">
+            <div className="logo-glow">
+              <img src={Logo} alt="Mediamatic Studio Logo" className="logo-img" />
             </div>
-            <div className="stat">
-              <h3>99.9%</h3>
-              <span>Uptime</span>
-            </div>
-            <div className="stat">
-              <h3>5M+</h3>
-              <span>Deals Closed</span>
+            <h2 className="company-name"><span>Mediamatic Studio</span>
+            <p className="company-tagline">Enterprise CRM Solution</p>
+             </h2>
+          </div>
+           
+          <div className="quote-container">
+            {/* <div className="quote-icon" aria-hidden="true">❝</div> */}
+            <h1 className="quote-title">{quote.title}</h1>
+            <p className="quote-content">{quote.content}</p>
+          </div>
+
+          <div className="brand-footer">
+            <p>Trusted by leading enterprises worldwide</p>
+            <div className="security-badge">
+              🔒 SSL Secured • GDPR Compliant
             </div>
           </div>
         </div>
@@ -109,61 +142,91 @@ export const Login = () => {
 
       {/* RIGHT LOGIN PANEL */}
       <div className="form-panel">
-        <form className="login-card" onSubmit={handleLogin}>
-        <h2>Welcome Back</h2>
-        <p className="subtitle">Login to continue to your CRM</p>
-
-        <div className="input-group">
-          <label>Email</label>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="input-group password-group">
-          <label>Password</label>
-
-          <div className="password-wrapper">
-            <input
-              type={showPassword ? "password": "text"}
-              
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-
-            <span
-              className="toggle-password"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
+        <div className="form-container">
+          <div className="form-header">
+            <h2>Welcome Back</h2>
+            <p className="subtitle">Sign in to continue to your CRM dashboard</p>
           </div>
+
+          <form className="login-form" onSubmit={handleLogin} noValidate>
+            <div className="input-group">
+              <label htmlFor="email">
+                <FiMail className="input-icon" aria-hidden="true" />
+                Email Address
+              </label>
+              <input
+                id="email"
+                type="email"
+                placeholder="you@company.com"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setEmailError(""); // Clear error on change
+                }}
+                required
+                className={`form-input ${emailError ? "error" : ""}`}
+                aria-describedby={emailError ? "email-error" : undefined}
+              />
+              {emailError && <span id="email-error" className="error-message" role="alert">{emailError}</span>}
+            </div>
+
+            <div className="input-group">
+              <label htmlFor="password">
+                <FiLock className="input-icon" aria-hidden="true" />
+                Password
+              </label>
+              <div className="password-wrapper">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="form-input"
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </div>
+
+            <div className="form-options">
+              <a href="/forgot-password" className="forgot-link">
+                Forgot Password?
+              </a>
+            </div>
+
+            <button
+              className="login-btn"
+              type="submit"
+              disabled={loading}
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+              aria-describedby="login-status"
+            >
+              {loading && <FaSpinner className="spinner" aria-hidden="true" />}
+              <span id="login-status">{loading ? "Signing in..." : "Sign In"}</span>
+              {!loading && <FiArrowRight className={`btn-arrow ${isHovering ? 'hover' : ''}`} aria-hidden="true" />}
+            </button>
+
+            <div className="form-footer">
+              <p>
+                Need help?{" "}
+                <a href="/support" className="support-link">
+                  Contact Support
+                </a>
+              </p>
+              <p className="copyright">© 2025 Mediamatic Studio CRM • v2.1.0</p>
+            </div>
+          </form>
         </div>
-
-
-        <div className="actions">
-          {/* <label className="remember">
-            <input type="checkbox" /> Remember me
-          </label> */}
-          <a href="/forgot-password">Forgot Password?</a>
-        </div>
-
-        {/* {message && <p className="login-message">{message}</p>} */}
-
-        <button className="login-btn" type="submit" disabled={loading}>
-          {loading ? "Logining..." : "Login"}
-        </button>
-
-        <div className="footer">© 2025 Mediamatic Studio CRM</div>
-      </form>
       </div>
     </div>
   );
-}
-
+};

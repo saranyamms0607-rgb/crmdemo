@@ -3,43 +3,91 @@ import { useNavigate } from "react-router-dom";
 import ImportLeads from "./ImportLeads";
 import ExportLeads from "./ExportLeads";
 import "../styles/Settings.css";
-import { FiUser } from "react-icons/fi";
-
-
+import { 
+  FiUser, 
+  FiArrowLeft, 
+  FiUpload, 
+  FiDownload,
+  FiUsers,
+  FiChevronRight
+} from "react-icons/fi";
 
 export const Settings = () => {
   const navigate = useNavigate();
 
   return (
     <div className="settings-wrapper">
-      {/* Back Button */}
-      <button className="back-btn" onClick={() => navigate(-1)}>
-        ← Back
-      </button>
-         {/* import csv */}
+      {/* Header Section */}
+      <header className="settings-header">
+        <button className="back-btn" onClick={() => navigate(-1)}>
+          <FiArrowLeft className="back-icon" />
+          <span>Back</span>
+        </button>
+        <div className="header-content">
+          <h1 className="settings-title">Settings</h1>
+          <p className="settings-subtitle">Manage your leads and team members</p>
+        </div>
+      </header>
+
+      {/* Settings Cards Grid */}
       <div className="settings-container">
-        <div className="settings-card">
-          <h3>Import Leads</h3>
-          <p>Upload leads using CSV file</p>
+        {/* Import Leads Card */}
+        <div className="settings-card import-card">
+          <div className="card-header">
+            <div className="card-icon-wrapper import-icon">
+              <FiUpload size={24} />
+            </div>
+            <div>
+              <h3 className="card-title">Import Leads</h3>
+              <p className="card-description">Upload leads using CSV or Excel files</p>
+            </div>
+          </div>
           <ImportLeads />
+          <div className="card-footer">
+            <span className="format-hint">Supports: .csv, .xlsx (Max 10MB)</span>
+          </div>
         </div>
 
-         {/* export CSV */}
-        <div className="settings-card">
-          <h3>Export Leads</h3>
-          <p>Download all leads as CSV</p>
+        {/* Export Leads Card */}
+        <div className="settings-card export-card">
+          <div className="card-header">
+            <div className="card-icon-wrapper export-icon">
+              <FiDownload size={24} />
+            </div>
+            <div>
+              <h3 className="card-title">Export Leads</h3>
+              <p className="card-description">Download all leads with custom filters</p>
+            </div>
+          </div>
           <ExportLeads />
+          <div className="card-footer">
+            <span className="format-hint">Exports as: CSV, Excel, JSON</span>
+          </div>
         </div>
 
-       {/* User List */}
-        <div className="settings-card" id="settings-card" onClick={()=>navigate("/adduser")} >
-          <h3>Add Users</h3>
-         <FiUser size={100} />
+        {/* User Management Card */}
+        <div className="settings-card user-card" onClick={() => navigate("/adduser")}>
+          <div className="card-header">
+            <div className="card-icon-wrapper user-icon">
+              <FiUsers size={24} />
+            </div>
+            <div>
+              <h3 className="card-title">User Management</h3>
+              <p className="card-description">Add and manage team members</p>
+            </div>
+            <FiChevronRight className="chevron-icon" size={20} />
+          </div>
+          
+          <div className="user-card-content">
+            <FiUser size={80} className="user-illustration" />
+            <p className="user-card-text">Click to add new users or manage existing team members</p>
+          </div>
+          
+          <div className="card-footer">
+            <span className="user-count">Manage roles and permissions</span>
+          </div>
         </div>
-        
       </div>
     </div>
   );
 };
-
-
