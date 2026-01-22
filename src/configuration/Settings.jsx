@@ -1,5 +1,7 @@
 import React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import ImportLeads from "./ImportLeads";
 import ExportLeads from "./ExportLeads";
 import "../styles/Settings.css";
@@ -14,6 +16,8 @@ import {
 
 export const Settings = () => {
   const navigate = useNavigate();
+  const [file, setFile] = useState(null);
+  
 
   return (
     <div className="settings-wrapper">
@@ -34,15 +38,26 @@ export const Settings = () => {
         {/* Import Leads Card */}
         <div className="settings-card import-card">
           <div className="card-header">
-            <div className="card-icon-wrapper import-icon">
+            {/* <div className="card-icon-wrapper import-icon">
+              
               <FiUpload size={24} />
-            </div>
+            </div> */}
+            <label className="card-icon-wrapper import-icon">
+                 <FiUpload size={24} />
+            <input
+              type="file"
+              accept=".csv"
+              onChange={(e) => setFile(e.target.files[0])}
+              hidden
+            />
+          </label>
+
             <div>
               <h3 className="card-title">Import Leads</h3>
               <p className="card-description">Upload leads using CSV or Excel files</p>
             </div>
           </div>
-          <ImportLeads />
+          <ImportLeads file={file} setFile={setFile} />
           <div className="card-footer">
             <span className="format-hint">Supports: .csv, .xlsx (Max 10MB)</span>
           </div>

@@ -711,3 +711,90 @@
 .agent-select .react-select__input-container {
   color: var(--text-dark);
 }
+
+/* ================================
+   TABLET PORTRAIT (CRM VERTICAL)
+================================ */
+@media (max-width: 1024px) {
+  .assigned-leads {
+    flex-direction: column;
+  }
+
+  /* Sidebar becomes drawer */
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 320px;            /* reduced from 400px */
+    transform: translateX(-100%);
+    z-index: 1000;
+    background: var(--primary-dark);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .main {
+    padding: 16px;
+  }
+
+  .content {
+    padding: 16px;
+    min-height: auto;
+  }
+
+  /* Header stacks nicely */
+  .table-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .search-bar {
+    width: 100%;
+  }
+
+  .filter {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Card table tighter for tablet */
+  .leads tr {
+    padding: 16px;
+  }
+
+  .leads td {
+    font-size: 15px;
+    padding: 6px 0;
+  }
+
+  .leads td::before {
+    font-size: 13px;
+  }
+
+  /* Bulk controls = vertical */
+  .bulk-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .bulk-controls select,
+  .agent-select {
+    width: 100%;
+  }
+}
+
+
+/* FORCE HAMBURGER VISIBILITY */
+@media (max-width: 1024px) {
+  .hamburger {
+    display: block !important;
+  }
+}

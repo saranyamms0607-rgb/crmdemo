@@ -2,8 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 
-export default function ImportLeads() {
-  const [file, setFile] = useState(null);
+export default function ImportLeads({file, setFile}) {
   const [loading, setLoading] = useState(false);
 
   const handleImport = async () => {

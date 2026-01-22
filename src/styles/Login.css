@@ -1,7 +1,7 @@
 /* Login Page */
 .login-page {
   display: flex;
-  min-height: 100vh;
+  min-height: 97.5vh;
   background: var(--cream-bg);
 }
 
@@ -56,7 +56,7 @@
 
 .logo-img {
   width: 180px; /* Increased from 120px for better readability */
-  height: 180px; /* Increased from 120px for better readability */
+  height: 130px; /* Increased from 120px for better readability */
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
 }
 
@@ -65,29 +65,24 @@
   font-weight: 700;
   margin: 0; /* Removed bottom margin since it's now inline */
   letter-spacing: -0.5px;
-  background: linear-gradient(135deg, #fff 0%, #f9e7d3 100%);
+  background: linear-gradient(135deg,var(--text-light) 0%, var(--accent-gold-light) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: var(--text-light);
-
 }
-.company-name span{
-  color:var(--text-light);
 
-}
 .company-tagline {
-  color: var(--text-light);
   font-size: 1rem;
   margin: 0;
   /* display: none; Hidden to keep only logo and name on one line; remove if you want tagline back */
 }
 
 .quote-container {
-  flex: 1;
+  /* flex: 1; */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 20px 0; /* Reduced from 40px to tighten space between quotes and above section */
+  padding: 50px 30px;
+   /* Reduced from 40px to tighten space between quotes and above section */
 }
 
 .quote-icon {
@@ -120,6 +115,14 @@
   color: var(--text-muted);
   margin: 0 0 10px 0;
 }
+.brand-footer {
+  position: relative;
+  margin-top: auto;
+  text-align: center;
+  padding: 30px 0 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 
 .security-badge {
   display: inline-flex;
@@ -318,7 +321,12 @@
 .support-link:hover {
   text-decoration: underline;
 }
-
+.error-message{
+  color: var(--error-red);
+  font-size: 0.9rem;
+  margin-top: -16px;
+  margin-bottom: 16px;
+}
 .copyright {
   font-size: 0.85rem;
   color: rgba(91, 29, 38, 0.6);

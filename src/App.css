@@ -1,0 +1,22 @@
+
+:root {
+  --primary-dark: #6b1f2b;
+  --primary-mid: #7a2530;
+  --primary-light: #9a5a2a;
+
+  --cream-bg: #fff3c4;
+  --card-bg: #fff8de;
+
+  --text-light: #f9e7d3;
+  --text-muted: rgba(255, 255, 255, 0.75);
+  --text-dark: #5b1d26;
+
+  --border-soft: rgba(91, 29, 38, 0.15);
+  --input-bg: #fff6df;
+
+  --btn-bg: #5b0f1b;
+  --btn-hover: #731826;
+
+  --shadow-soft: 0 20px 40px rgba(0, 0, 0, 0.15);
+    --error-red: #dd6767;
+}

@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash, FaSpinner } from "react-icons/fa"; // Added FaSpinner for loading
 import { FiArrowRight, FiLock, FiMail } from "react-icons/fi";
-import Logo from "../assets/mms-logo-gold.png";
+import Logo from "../assets/logo.png";
 import quotes from "../data/Quotes.json";
 import "../styles/Login.css";
 
@@ -89,7 +89,7 @@ export const Login = () => {
         localStorage.setItem("role", data.role);
         localStorage.setItem("email", trimmedEmail);
 
-        toast.success("Welcome back! Redirecting...", {
+        toast.success("Welcome back!", {
           icon: "👋",
         });
 
@@ -191,7 +191,7 @@ export const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
                 </button>
               </div>
             </div>
